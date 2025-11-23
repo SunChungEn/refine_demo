@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>ReFIne Output Showcase</title>
+
+<style>
+  body {
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    margin: 20px;
+  }
+
+  /* ReFIne tag chips */
+  .refine-tag {
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, "Courier New", monospace;
+    font-weight: 400;
+    font-size: 0.92em;
+    letter-spacing: 0.02em;
+    display: inline-flex;
+    align-items: center;
+    justify-content: flex-start;   /* align text left */
+    padding: 3px 12px 4px 12px;
+    border: 1px solid #cfd5ff;
+    border-radius: 999px;
+    background: #f7f8ff;
+    color: #3646b3;
+    cursor: pointer;
+    user-select: none;
+    transition: all 0.15s ease;
+    transform-origin: bottom center;  /* make scale lift upward */
+  }
+
+  /* single angle brackets only once */
+  .refine-tag::before { content: "< "; opacity: 0.7; }
+  .refine-tag::after  { content: " >"; opacity: 0.7; }
+
+  /* hover “lift” effect */
+  .refine-tag:hover {
+    transform: translateY(-1.5px) scale(1.05);
+    box-shadow: 0 3px 6px rgba(0,0,0,0.08);
+  }
+
+  /* active (expanded) state */
+  details[open] > summary .refine-tag {
+    filter: brightness(0.96);
+    transform: translateY(-1px);
+  }
+
+  /* color themes */
+  .tag-understanding { background: #dbe9ff; border-color: #9ec2ff; color: #0d3c91; }
+  .tag-facts         { background: #dff8dc; border-color: #8ed48a; color: #135e18; }
+  .tag-plan          { background: #ffe2c2; border-color: #ffb577; color: #5c3200; }
+  .tag-think         { background: #e7e4ff; border-color: #b2abff; color: #2f22c7; }
+    .tag-final_answer  { background: #ffd6eb; border-color: #f8a3d4; color: #831d5e; }
+  .tag-self_assess   { background: #d9f4f4; border-color: #8edada; color: #0d5959; }
+
+  /* collapsible structure */
+  .refine-block { margin: 10px 0; }
+  .refine-block summary { list-style: none; outline: none; cursor: pointer; }
+  .refine-block summary::-webkit-details-marker { display: none; }
+
+  .refine-content {
+    border: 1px solid #edf0fb;
+    border-radius: 12px;
+    padding: 10px 14px;
+    background: #fff;
+    margin-top: 8px;
+    box-shadow: 0 1px 0 rgba(27,31,36,0.04);
+  }
+
+  /* tag bars and content body */
+  .refine-tagbar {
+    display: flex;
+    justify-content: flex-start; /* align tags to left */
+    margin: 6px 0;
+  }
+  .refine-body {
+    line-height: 1.45em;
+    text-align: justify;
+    padding: 6px 2px;
+  }
+  .refine-body ul,
+  .refine-body ol {
+    margin: 0;
+    padding-left: 20px;
+  }
+
+  /* problem card */
+  .problem-card {
+    border:1px solid #cdd6f3;
+    border-radius:10px;
+    padding:14px 16px;
+    background:#f1f4ff;
+    margin-bottom:14px;
+  }
+
+  /* play button */
+  #play-refine-sequence {
+    margin: 4px 0 16px 0;
+    padding: 6px 14px;
+    border-radius: 999px;
+    border: 1px solid #cfd5ff;
+    background: #f7f8ff;
+    font-size: 0.9em;
+    cursor: pointer;
+    transition: all 0.15s ease;
+  }
+  #play-refine-sequence:hover:not(:disabled) {
+    box-shadow: 0 3px 6px rgba(0,0,0,0.06);
+    transform: translateY(-1px);
+  }
+  #play-refine-sequence:disabled {
+    opacity: 0.6;
+    cursor: default;
+  }
+
+  /* summary hidden during generation */
+  .refine-summary.hidden {
+    display: none;
+  }
+</style>
+</head>
+<body>
+
+<section id="refine-output-showcase" style="margin-top:8px;">
+  <div style="
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      margin-bottom:6px;">
+    
+    <h2 style="margin:0;">ReFIne Model Output Showcase</h2>
+
+    <button id="play-refine-sequence" style="
+        margin:0;
+        padding: 6px 14px;
+        border-radius: 999px;
+        border: 1px solid #cfd5ff;
+        background: #f7f8ff;
+        font-size: 0.9em;
+        cursor: pointer;
+        transition: all 0.15s ease;">
+      ▶ Play
+    </button>
+  </div>
+
+  <hr>
+  
+  <!-- Problem (exact text, no bulky gray box) -->
+  <div class="problem-card">
+    <p style="margin:0;white-space:pre-wrap;">
+Janet’s ducks lay 16 eggs per day. She eats three for breakfast every morning and bakes muffins for her friends every day with four. She sells the remainder at the farmers' market daily for $2 per fresh duck egg. How much in dollars does she make every day at the farmers' market?
+    </p>
+  </div>
+
+  <!-- understanding -->
+  <details class="refine-block understanding">
+    <summary class="refine-summary">
+      <span class="refine-tag tag-understanding">understanding</span> (click to expand)
+    </summary>
+    <div class="refine-content">
+      <div class="refine-tagbar"><span class="refine-tag tag-understanding">understanding</span></div>
+
+      <div class="refine-body">
+        The problem is asking about how much money Janet makes each day at the farmers' market from selling duck eggs. It provides information about the number of eggs Janet's ducks lay daily, how many eggs Janet uses for breakfast, how many she uses for baking muffins, and the price per egg when she sells the remaining eggs. The task is to determine the daily income from the sales at the farmers' market, based on the number of eggs sold and the price per egg.
+      </div>
+
+      <div class="refine-tagbar"><span class="refine-tag tag-understanding">/understanding</span></div>
+    </div>
+  </details>
+
+  <!-- facts -->
+  <details class="refine-block facts">
+    <summary class="refine-summary">
+      <span class="refine-tag tag-facts">facts</span> (click to expand)
+    </summary>
+    <div class="refine-content">
+      <div class="refine-tagbar"><span class="refine-tag tag-facts">facts</span></div>
+
+      <div class="refine-body">
+        <ul>
+          <li>Janet’s ducks lay 16 eggs per day.</li>
+          <li>Janet eats 3 eggs for breakfast every morning.</li>
+          <li>Janet bakes muffins for her friends every day using 4 eggs.</li>
+          <li>Janet sells the remainder of the eggs at the farmers' market daily.</li>
+          <li>Janet sells each fresh duck egg for $2.</li>
+        </ul>
+      </div>
+
+      <div class="refine-tagbar"><span class="refine-tag tag-facts">/facts</span></div>
+    </div>
+  </details>
+
+  <!-- plan -->
+  <details class="refine-block plan">
+    <summary class="refine-summary">
+      <span class="refine-tag tag-plan">plan</span> (click to expand)
+    </summary>
+    <div class="refine-content">
+      <div class="refine-tagbar"><span class="refine-tag tag-plan">plan</span></div>
+
+      <div class="refine-body">
+        <ol>
+          <li>Determine the total number of eggs laid by Janet's ducks each day, which is given as 16.</li>
+          <li>Calculate the total number of eggs used by Janet for personal consumption, which includes 3 eggs for breakfast and 4 eggs for baking muffins, totaling 7 eggs.</li>
+          <li>Subtract the number of eggs used for personal consumption from the total number of eggs laid to find out how many eggs are left for sale at the farmers' market.</li>
+          <li>Multiply the number of eggs available for sale by the price per egg, which is $2, to calculate the daily income from the farmers' market sales.</li>
+        </ol>
+      </div>
+
+      <div class="refine-tagbar"><span class="refine-tag tag-plan">/plan</span></div>
+    </div>
+  </details>
+
+  <!-- think -->
+  <details class="refine-block think">
+    <summary class="refine-summary">
+      <span class="refine-tag tag-think">think</span> (click to expand)
+    </summary>
+    <div class="refine-content">
+      <div class="refine-tagbar"><span class="refine-tag tag-think">think</span></div>
+
+      <div class="refine-body">
+        Okay, let's tackle this problem step by step. First, I need to make sure I understand what's being asked. The question is about how much money Janet makes each day at the farmers' market by selling her ducks' eggs. The key here is to figure out how many eggs she has left after she uses some for her own breakfast and baking, and then multiply that by the price per egg.<br><br>
+        Looking at the <span class="refine-tag tag-understanding">understanding</span> section, it confirms that the goal is to calculate her daily income from the market sales. The <span class="refine-tag tag-facts">facts</span> provide the numbers: 16 eggs laid daily, 3 eaten for breakfast, 4 used for muffins, and each egg sold for $2. The <span class="refine-tag tag-plan">plan</span> outlines the steps clearly, so I should follow that.<br><br>
+        Starting with step 1 from the <span class="refine-tag tag-plan">plan</span>, the total eggs laid per day are 16. That's straightforward. Then step 2 says to calculate the eggs used for personal consumption. According to the <span class="refine-tag tag-facts">facts</span>, she eats 3 for breakfast and uses 4 for muffins. Adding those together, 3 + 4 equals 7 eggs. So, she uses 7 eggs each day.<br><br>
+        Moving to step 3, I need to subtract the eggs used from the total laid. So 16 total eggs minus 7 used equals 9 eggs left for sale. Wait, let me check that again. 16 minus 7 is indeed 9. So, 9 eggs are available for the market.<br><br>
+        Step 4 is to multiply the number of eggs sold by the price per egg. The price is $2 per egg. So 9 eggs times $2 gives $18. That seems right. Let me verify each step again to be sure. <br><br>
+        Total eggs: 16. Eggs used: 3 + 4 = 7. Remaining eggs: 16 - 7 = 9. Sales revenue: 9 * 2 = $18. Yep, that adds up. I don't see any mistakes in the <span class="refine-tag tag-facts">facts</span> or the <span class="refine-tag tag-plan">plan</span>. The calculations are simple arithmetic, so as long as each step is followed correctly, the answer should be correct. Therefore, Janet makes $18 every day at the farmers' market.
+      </div>
+
+      <div class="refine-tagbar"><span class="refine-tag tag-think">/think</span></div>
+    </div>
+  </details>
+
+  <!-- final_answer -->
+  <details class="refine-block final_answer">
+    <summary class="refine-summary">
+      <span class="refine-tag tag-final_answer">final_answer</span> (click to expand)
+    </summary>
+    <div class="refine-content">
+      <div class="refine-tagbar"><span class="refine-tag tag-final_answer">final_answer</span></div>
+
+      <div class="refine-body">
+        To determine how much money Janet makes every day at the farmers' market, we follow the steps outlined in the <span class="refine-tag tag-plan">plan</span> and use the information provided in the <span class="refine-tag tag-facts">facts</span>.<br><br>
+        ---<br><br>
+        <strong>Step 1: Total Eggs Laid Per Day</strong><br>
+        From the <span class="refine-tag tag-facts">facts</span>, we know that Janet’s ducks lay <strong>16 eggs per day</strong>.<br><br>
+        ---<br><br>
+        <strong>Step 2: Eggs Used for Personal Consumption</strong><br>
+        Janet uses <strong>3 eggs for breakfast</strong> and <strong>4 eggs for baking muffins</strong>.<br>
+        $$\text{Total eggs used} = 3 + 4 = 7$$
+        <br><br>
+        ---<br><br>
+        <strong>Step 3: Eggs Available for Sale</strong><br>
+        To find the number of eggs left for sale, subtract the eggs used from the total laid:<br>
+        $$\text{Eggs available for sale} = 16 - 7 = 9$$
+        <br><br>
+        ---<br><br>
+        <strong>Step 4: Revenue from Farmers' Market Sales</strong><br>
+        Each egg is sold for <strong>$2</strong>, so the daily income from sales is:<br>
+        $$\text{Daily income} = 9 \times 2 = 18$$
+        <br><br>
+        ---<br><br>
+        <strong>Final Answer</strong><br>
+        $$\boxed{18}$$
+      </div>
+
+      <div class="refine-tagbar"><span class="refine-tag tag-final_answer">/final_answer</span></div>
+    </div>
+  </details>
+
+  <!-- self_assessment -->
+  <details class="refine-block self_assess">
+    <summary class="refine-summary">
+      <span class="refine-tag tag-self_assess">self_assessment</span> (click to expand)
+    </summary>
+    <div class="refine-content">
+      <div class="refine-tagbar"><span class="refine-tag tag-self_assess">self_assessment</span></div>
+
+      <div class="refine-body">
+        I followed the plan step by step, verifying each calculation and ensuring that the logic was consistent with the given facts. I double-checked the arithmetic and confirmed that the total eggs laid, the eggs used, and the remaining eggs for sale all align with the information provided. The final calculation of $18 seems accurate based on the given data. I do not see any contradictions, unverified assumptions, or logical gaps in my reasoning. Every step was clearly justified and internally consistent. I believe my reasoning is solid and well-supported.<br>
+        Confidence: 10/10
+      </div>
+
+      <div class="refine-tagbar"><span class="refine-tag tag-self_assess">/self_assessment</span></div>
+    </div>
+  </details>
+</section>
+
+<script>
+  (function () {
+    const PLAY_BUTTON_ID = "play-refine-sequence";
+    const WORD_DELAY_MS = 40;     // delay per token (word/space)
+    const BLOCK_PAUSE_MS = 600;   // pause after each block finishes
+
+    const playButton = document.getElementById(PLAY_BUTTON_ID);
+    const detailsBlocks = Array.from(
+      document.querySelectorAll("#refine-output-showcase details.refine-block")
+    );
+
+    if (!playButton || detailsBlocks.length === 0) return;
+
+    // Pre-store full HTML for each refine-body and start empty
+    const bodies = [];
+    detailsBlocks.forEach(block => {
+      const body = block.querySelector(".refine-body");
+      if (!body) return;
+      if (!body.dataset.fullHtml) {
+        body.dataset.fullHtml = body.innerHTML.trim();
+      }
+      body.innerHTML = "";
+      bodies.push(body);
+    });
+
+    function resetAllBodies() {
+      bodies.forEach(body => {
+        body.innerHTML = "";
+      });
+    }
+
+    function sleep(ms) {
+      return new Promise(resolve => setTimeout(resolve, ms));
+    }
+
+    // HTML-aware word-by-word typer: preserves elements, types text nodes
+    async function typeBody(body, baseDelay) {
+      const fullHtml = body.dataset.fullHtml || "";
+      body.innerHTML = "";
+
+      const tempContainer = document.createElement("div");
+      tempContainer.innerHTML = fullHtml;
+
+      async function processNode(srcNode, destParent) {
+        if (srcNode.nodeType === Node.TEXT_NODE) {
+          const text = srcNode.textContent || "";
+          const tokens = text.split(/(\s+)/); // keep whitespace as separate tokens
+          if (tokens.length === 0) return;
+
+          const textNode = document.createTextNode("");
+          destParent.appendChild(textNode);
+
+          for (const token of tokens) {
+            textNode.data += token;
+            if (token.trim().length > 0 || token.includes("\n")) {
+              await sleep(baseDelay);
+            }
+          }
+        } else if (srcNode.nodeType === Node.ELEMENT_NODE) {
+          const clone = document.createElement(srcNode.tagName);
+          // copy attributes
+          for (const attr of srcNode.attributes) {
+            clone.setAttribute(attr.name, attr.value);
+          }
+          destParent.appendChild(clone);
+
+          for (const child of Array.from(srcNode.childNodes)) {
+            await processNode(child, clone);
+          }
+        } else {
+          // ignore comments or other node types
+        }
+      }
+
+      for (const child of Array.from(tempContainer.childNodes)) {
+        await processNode(child, body);
+      }
+    }
+
+    async function playSequence() {
+      playButton.disabled = true;
+      playButton.textContent = "⏳ Playing...";
+
+      resetAllBodies();
+
+      // Hide all summaries while we generate
+      const allSummaries = document.querySelectorAll(".refine-summary");
+      allSummaries.forEach(s => s.classList.add("hidden"));
+
+      // Ensure all details collapsed initially
+      detailsBlocks.forEach(d => { d.open = false; });
+
+      for (const block of detailsBlocks) {
+        const body = block.querySelector(".refine-body");
+        const summary = block.querySelector(".refine-summary");
+        if (!body) continue;
+
+        block.open = true;
+        block.scrollIntoView({ behavior: "smooth", block: "center" });
+
+        await typeBody(body, WORD_DELAY_MS);
+
+        // After typing finishes, show this block's summary line
+        if (summary) summary.classList.remove("hidden");
+
+        await sleep(BLOCK_PAUSE_MS);
+        block.open = false;
+      }
+
+      playButton.disabled = false;
+      playButton.textContent = "▶ Play generation sequence";
+    }
+
+    playButton.addEventListener("click", () => {
+      if (playButton.disabled) return;
+      playSequence();
+    });
+  })();
+</script>
+
+</body>
+</html>
